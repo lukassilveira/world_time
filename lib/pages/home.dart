@@ -11,11 +11,16 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    if (data.isNotEmpty) {
+      data = data;
+    } else {
+      data = ModalRoute.of(context).settings.arguments;
+    }
 
-    data = ModalRoute.of(context).settings.arguments;
-
-    Color bgColor = data['isDayTime'] ? Colors.white : Colors.grey[900];
-    Color fontColor = data['isDayTime'] ? Colors.black : Colors.white;
+    Color bgColor = Colors.white;
+    //data['isDayTime'] ? Colors.white : Colors.grey[900];
+    Color fontColor = Colors.black;
+    //data['isDayTime'] ? Colors.black : Colors.white;
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -46,8 +51,17 @@ class _HomeState extends State<Home> {
               SizedBox(height: 40,),
               FlatButton.icon(
                 color: Colors.grey[400],
-                onPressed: () {   
-                  Navigator.pushNamed(context, '/location');             
+                onPressed: () async {   
+                  dynamic result = await Navigator.pushNamed(context, '/location');
+                  if (result != null){
+                    setState(() {
+                      data = {
+                        'time': result['time'],
+                        'location': result['location'],
+                        //'isDaytime': result['isDaytime']
+                      };
+                    });
+                  }  
                 },
                 icon: Icon(
                   Icons.edit_location,
